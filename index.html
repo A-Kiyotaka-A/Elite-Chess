@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- عنوان التبويب مع رموز أجمل -->
     <title>✧ Elite Chess ✧</title>
     <link rel="icon" href="favicon.png" type="image/png">
+    
+    <!-- ملف التنسيق الأساسي -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- ملف تنسيق الرقعة -->
+    <link rel="stylesheet" href="chessboard-1.0.0.css">
 </head>
 <body>
 
@@ -18,6 +22,22 @@
     <!-- الطبقة الزجاجية اللامعة الشفافة -->
     <div class="glass-overlay"></div>
 
+    <!-- حاوية الرقعة (هنا ستظهر الرقعة) -->
+    <div id="board-container"></div>
+
+    <!-- السكريبت الأساسي -->
     <script src="script.js"></script>
+    
+    <!-- مكتبة jQuery (مطلوبة لـ chessboard.js) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- محرك القواعد -->
+    <script src="chess.js"></script>
+    
+    <!-- مكتبة عرض الرقعة -->
+    <script src="chessboard-1.0.0.js"></script>
+    
+    <!-- ملف الربط (سننشئه في الخطوة 3) -->
+    <script src="init.js"></script>
 </body>
 </html>
