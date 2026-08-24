@@ -6,21 +6,24 @@ var board = Chessboard('board-container', {
     draggable: true,
     position: 'start',
     
-    // مسار صور القطع
-    // ⚠️ مهم: غيّر هذا المسار حسب مكان صور القطع لديك
-    // إذا كانت الصور في مجلد img وأسمائها مثل wP.png, bK.png
-    pieceTheme: 'img/{piece}.png',
+    // ✅ تم تصحيح مسار الصور ليطابق مجلداتك على GitHub
+    pieceTheme: 'img/chesspieces/wikipedia/{piece}.png',
     
     // التحقق من الحركات القانونية
     onDrop: function(source, target) {
         var move = game.move({
             from: source,
             to: target,
-            promotion: 'q'
+            promotion: 'q' // ترقية تلقائية للوزير
         });
         
-        // إذا كانت الحركة غير قانونية، أعد القطعة
+        // إذا كانت الحركة غير قانونية، أعد القطعة لمكانها
         if (move === null) return 'snapback';
+    },
+    
+    // تحديث حالة اللعبة بعد كل حركة (للتأكد من عدم وجود أخطاء)
+    onSnapEnd: function() {
+        board.position(game.fen());
     }
 });
 
