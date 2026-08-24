@@ -22,7 +22,7 @@ languageBtn.addEventListener('click', (e) => {
     languageMenu.classList.toggle('active');
 });
 
-// 3. تغيير اللغة والترجمة
+// 3. نظام اللغات والعناوين
 const langOptions = document.querySelectorAll('.lang-option');
 const menuText = document.querySelector('.menu-text');
 
@@ -33,26 +33,31 @@ const tabTitles = {
     ja: '｢ エリート・チェス ｣'
 };
 
+// دالة تطبيق اللغة
+function applyLanguage(lang) {
+    // تحديث تحديد اللغة
+    langOptions.forEach(opt => opt.classList.remove('selected'));
+    document.querySelector(`[data-lang="${lang}"]`).classList.add('selected');
+    
+    // ترجمة النصوص في القائمة
+    menuText.textContent = menuText.getAttribute(`data-${lang}`);
+    
+    // تغيير عنوان التبويب (تم إصلاح المشكلة هنا)
+    document.title = tabTitles[lang];
+    
+    // تغيير اتجاه الصفحة
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+}
+
+// إضافة أحداث الضغط على خيارات اللغة
 langOptions.forEach(option => {
     option.addEventListener('click', (e) => {
         e.stopPropagation();
         const lang = option.getAttribute('data-lang');
-        
-        // تحديث تحديد اللغة
-        langOptions.forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
-        
-        // ترجمة النصوص في القائمة
-        menuText.textContent = menuText.getAttribute(`data-${lang}`);
-        
-        // تغيير عنوان التبويب
-        document.title = tabTitles[lang];
-        
-        // تغيير اتجاه الصفحة
-        document.documentElement.lang = lang;
-        document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+        applyLanguage(lang);
     });
 });
 
-// تحديد العربية كافتراضية
-document.querySelector('[data-lang="ar"]').classList.add('selected');
+// تحديد العربية كافتراضية عند التحميل
+applyLanguage('ar');
