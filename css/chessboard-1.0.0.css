@@ -1,15 +1,15 @@
-/*! chessboard.js v1.0.0 | MIT License */
+/*! chessboard.js v1.0.0 | (c) 2019 Chris Oakman | MIT License chessboardjs.com/license */
 .clearfix-7da63 {
     clear: both;
 }
 
-/* تعديل إطار الرقعة ليصبح فخماً وشفافاً */
+/* تعديل إطار الرقعة ليصبح فخماً وشفافاً مع ظل خلفي ناعم */
 .board-b72b1 {
     border: 2px solid rgba(255, 255, 255, 0.15);
     box-sizing: content-box;
     background-color: transparent;
-    border-radius: 8px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-radius: 8px; /* زوايا منحنية فخمة */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); /* ظل يعطي عمقاً للرقعة */
     overflow: hidden;
 }
 
@@ -27,22 +27,22 @@
 /* المربعات البيضاء: أبيض شفاف فخم */
 .white-1e1d7 {
     background-color: rgba(255, 255, 255, 0.25);
-    color: rgba(0, 0, 0, 0.6);
+    color: rgba(0, 0, 0, 0.6); /* لون الحروف الجانبية أسود ناعم */
 }
 
 /* المربعات السوداء: رمادي خفيف شفاف */
 .black-3c85d {
     background-color: rgba(128, 128, 128, 0.20);
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.7); /* لون الحروف الجانبية أبيض ناعم */
 }
 
-/* تعديل لون التحديد */
+/* تعديل لون التحديد عند اختيار قطعة ليناسب التصميم الشفاف */
 .highlight1-32417, .highlight2-9c5d2 {
     box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* تنسيق أرقام وحروف الرقعة */
+/* تنسيق أرقام وحروف الرقعة لتصبح أنيقة وفخمة */
 .notation-322f9 {
     cursor: default;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -62,25 +62,26 @@
     left: 4px;
 }
 
-/* لمعة وظل القطع */
+/* لمسة إضافية: تجعل قطع الشطرنج مدمجة بشكل فخم وتضيف لها ظلاً واقعياً */
 .square-55d63 img {
-    opacity: 0.9;
-    filter: drop-shadow(0px 5px 6px rgba(0, 0, 0, 0.5));
+    opacity: 0.9; /* شفافية خفيفة جداً للقطع لتندمج مع الرقعة */
+    filter: drop-shadow(0px 5px 6px rgba(0, 0, 0, 0.5)); /* ظل فخم للقطع */
     transition: all 0.2s ease;
 }
 
+/* تأثير تفاعلي عند تحريك الماوس فوق القطعة */
 .square-55d63 img:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px); /* ترتفع القطعة قليلاً بشكل ملكي */
     opacity: 1;
 }
 
-/* وضع الرقعة في المنتصف تماماً */
+/* وضع الرقعة في المنتصف تماماً (مطابق لـ id في HTML) */
 #board-container {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
-    width: 500px;
-    max-width: 90vw;
+    width: 500px; /* حجم مثالي للرقعة */
+    max-width: 90vw; /* للتجاوب مع شاشات الجوال */
 }
