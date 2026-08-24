@@ -21,7 +21,7 @@ var board = Chessboard('board-container', {
         if (move === null) return 'snapback';
     },
     
-    // تحديث حالة الرقعة بعد انتهاء الحركة (لضمان التزامن)
+    // تحديث حالة الرقعة بعد انتهاء الحركة لضمان التزامن
     onSnapEnd: function() {
         board.position(game.fen());
     }
