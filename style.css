@@ -8,7 +8,8 @@ body, html {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000;
 }
 
 /* الخلفية المتحركة */
@@ -19,72 +20,90 @@ body, html {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1;
+    z-index: 0;
 }
 
-/* الصندوق الزجاجي */
-.glass-box {
-    position: relative;
-    width: 95%;
-    height: 95%;
-    margin: 2.5% auto;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
+/* الطبقة الزجاجية اللامعة الشفافة (تغطي الشاشة كاملة بدون تشويش) */
+.glass-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* يسمح بالضغط على الأزرار تحتها */
+    background: 
+        linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 40%),
+        linear-gradient(315deg, rgba(255,255,255,0.03) 0%, transparent 40%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 
-        0 0 20px rgba(0, 255, 255, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+        inset 0 0 80px rgba(255, 255, 255, 0.05),
+        0 0 0 1px rgba(0,0,0,0.8);
+    z-index: 1;
 }
 
-/* العنوان */
-.main-title {
-    font-size: 4rem;
-    color: #fff;
-    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-}
-
-/* زر الإعدادات */
+/* زر الإعدادات (أسود نيون أسطوري) */
 .settings-btn {
     position: fixed;
     bottom: 30px;
     left: 30px;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.7);
-    border: 2px solid #00ffff;
-    color: #00ffff;
-    font-size: 1.5rem;
+    background: #050505; /* أسود داكن جداً */
+    border: 2px solid #1a1a1a;
     cursor: pointer;
-    box-shadow: 0 0 15px #00ffff;
     z-index: 1000;
-    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* تأثير النيون الأسود الأسطوري (توهج داكن حاد) */
+    box-shadow: 
+        0 0 15px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(10, 10, 10, 0.7),
+        0 0 45px rgba(20, 20, 20, 0.5),
+        inset 0 0 15px rgba(0, 0, 0, 0.8),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1); /* لمعة علوية تعطي شكل أسطوري */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.settings-btn svg {
+    width: 28px;
+    height: 28px;
+    stroke: #444;
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.1));
+    transition: all 0.3s ease;
 }
 
 .settings-btn:hover {
-    background: #00ffff;
-    color: #000;
-    box-shadow: 0 0 25px #00ffff;
+    transform: scale(1.08);
+    box-shadow: 
+        0 0 20px rgba(0, 0, 0, 1),
+        0 0 40px rgba(30, 30, 30, 0.8),
+        0 0 60px rgba(40, 40, 40, 0.6),
+        inset 0 0 20px rgba(0, 0, 0, 0.9),
+        inset 0 2px 4px rgba(255, 255, 255, 0.15);
+}
+
+.settings-btn:hover svg {
+    stroke: #777;
+    transform: rotate(90deg);
 }
 
 /* قائمة الإعدادات */
 .settings-menu {
     position: fixed;
-    bottom: 90px;
+    bottom: 105px;
     left: 30px;
-    background: rgba(0, 0, 0, 0.9);
-    border: 2px solid #00ffff;
-    border-radius: 10px;
+    background: rgba(5, 5, 5, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     padding: 10px;
     display: none;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     z-index: 999;
-    box-shadow: 0 0 15px #00ffff;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
 .settings-menu.active {
@@ -92,25 +111,28 @@ body, html {
 }
 
 .menu-item {
-    color: #fff;
+    color: #ddd;
     padding: 10px 20px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     transition: all 0.3s;
+    font-size: 0.95rem;
+    font-weight: 500;
 }
 
 .menu-item:hover {
-    background: rgba(0, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
 }
 
 /* قائمة اللغات */
 .language-menu {
     display: none;
     flex-direction: row;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 8px;
+    margin-top: 8px;
     padding-top: 10px;
-    border-top: 1px solid rgba(0, 255, 255, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .language-menu.active {
@@ -118,18 +140,22 @@ body, html {
 }
 
 .lang-option {
-    color: #fff;
-    padding: 5px 15px;
+    color: #aaa;
+    padding: 6px 14px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 6px;
     transition: all 0.3s;
+    font-size: 0.85rem;
+    border: 1px solid transparent;
 }
 
 .lang-option:hover {
-    background: rgba(0, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
 }
 
 .lang-option.selected {
-    background: rgba(0, 255, 255, 0.3);
-    border: 1px solid #00ffff;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
 }
