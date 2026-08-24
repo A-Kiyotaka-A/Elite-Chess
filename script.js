@@ -1,10 +1,10 @@
-// اختيار فيديو عشوائي عند كل تحميل
+// 1. اختيار فيديو عشوائي عند كل تحميل
 const videos = ['1.mp4', '2.mp4'];
 const randomVideo = videos[Math.floor(Math.random() * videos.length)];
 document.getElementById('video-source').src = randomVideo;
 document.getElementById('bg-video').load();
 
-// زر الإعدادات
+// 2. التحكم بالقوائم
 const settingsBtn = document.getElementById('settings-btn');
 const settingsMenu = document.getElementById('settings-menu');
 const languageBtn = document.getElementById('language-btn');
@@ -12,36 +12,45 @@ const languageMenu = document.getElementById('language-menu');
 
 settingsBtn.addEventListener('click', () => {
     settingsMenu.classList.toggle('active');
-    languageMenu.classList.remove('active');
+    if (!settingsMenu.classList.contains('active')) {
+        languageMenu.classList.remove('active');
+    }
 });
 
-languageBtn.addEventListener('click', () => {
+languageBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     languageMenu.classList.toggle('active');
 });
 
-// تغيير اللغة
+// 3. تغيير اللغة والترجمة
 const langOptions = document.querySelectorAll('.lang-option');
-const mainTitle = document.querySelector('.main-title');
+const menuText = document.querySelector('.menu-text');
+
+// عناوين التبويب مع الزخرفة المطلوبة
+const tabTitles = {
+    ar: '｢ شطرنج النُّخبة ｣',
+    en: '｢ Elite Chess ｣',
+    ja: '｢ エリート・チェス ｣'
+};
 
 langOptions.forEach(option => {
-    option.addEventListener('click', () => {
+    option.addEventListener('click', (e) => {
+        e.stopPropagation();
         const lang = option.getAttribute('data-lang');
         
-        // إزالة التحديد من الكل
+        // تحديث تحديد اللغة
         langOptions.forEach(opt => opt.classList.remove('selected'));
         option.classList.add('selected');
         
-        // تغيير العنوان
-        mainTitle.textContent = mainTitle.getAttribute(`data-${lang}`);
+        // ترجمة النصوص في القائمة
+        menuText.textContent = menuText.getAttribute(`data-${lang}`);
+        
+        // تغيير عنوان التبويب
+        document.title = tabTitles[lang];
         
         // تغيير اتجاه الصفحة
-        if (lang === 'ar') {
-            document.documentElement.lang = 'ar';
-            document.documentElement.dir = 'rtl';
-        } else {
-            document.documentElement.lang = lang;
-            document.documentElement.dir = 'ltr';
-        }
+        document.documentElement.lang = lang;
+        document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
     });
 });
 
