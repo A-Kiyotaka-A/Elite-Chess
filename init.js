@@ -6,10 +6,10 @@ var board = Chessboard('board-container', {
     draggable: true,
     position: 'start',
     
-    // ✅ تم تصحيح مسار الصور ليطابق مجلداتك على GitHub
+    // ✅ المسار الصحيح لصور القطع بناءً على مستودع GitHub الخاص بك
     pieceTheme: 'img/chesspieces/wikipedia/{piece}.png',
     
-    // التحقق من الحركات القانونية
+    // التحقق من الحركات القانونية عند الإفلات
     onDrop: function(source, target) {
         var move = game.move({
             from: source,
@@ -21,13 +21,13 @@ var board = Chessboard('board-container', {
         if (move === null) return 'snapback';
     },
     
-    // تحديث حالة اللعبة بعد كل حركة (للتأكد من عدم وجود أخطاء)
+    // تحديث حالة الرقعة بعد انتهاء الحركة (لضمان التزامن)
     onSnapEnd: function() {
         board.position(game.fen());
     }
 });
 
-// إعادة ضبط حجم الرقعة عند تغيير حجم النافذة
+// إعادة ضبط حجم الرقعة تلقائياً عند تغيير حجم نافذة المتصفح
 $(window).resize(function() {
     board.resize();
 });
