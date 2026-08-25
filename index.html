@@ -1,36 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>✧ Elite Chess ✧</title>
     <link rel="icon" href="favicon.png" type="image/png">
     
+    <!-- ملفات التنسيق -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/chessboard-1.0.0.css">
     <link rel="stylesheet" href="move-indicators.css">
+    <link rel="stylesheet" href="game-ui.css">
 </head>
 <body>
 
-    <video id="bg-video" autoplay muted loop playsinline>
+    <!-- الخلفية المتحركة -->
+    <video id="bg-video" autoplay muted loop playsinline preload="metadata">
         <source id="video-source" src="" type="video/mp4">
     </video>
 
+    <!-- الطبقة الزجاجية -->
     <div class="glass-overlay"></div>
 
-    <!-- رسالة تفكير أيانوكوجي -->
-    <div id="ayanokoji-status" style="position: fixed; top: 20px; right: 20px; color: rgba(255,255,255,0.8); font-family: 'Tajawal', sans-serif; font-size: 1.2rem; z-index: 100; text-shadow: 0 0 10px rgba(0,0,0,0.8); display: none;">
+    <!-- مؤشر تفكير أيانوكوجي -->
+    <div id="thinking-indicator" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #fff; padding: 8px 20px; border-radius: 20px; font-family: 'Segoe UI', Tahoma, sans-serif; z-index: 100; backdrop-filter: blur(5px); font-size: 14px;">
         أيانوكوجي يفكر...
     </div>
 
+    <!-- حاوية الرقعة -->
     <div id="board-container"></div>
 
+    <!-- أزرار التحكم الجانبية -->
+    <div class="side-controls">
+        <button id="btn-new-game" class="control-btn">
+            <span>🔄</span> لعبة جديدة
+        </button>
+        <button id="btn-undo" class="control-btn">
+            <span>↩️</span> تراجع
+        </button>
+        <div class="turn-indicator" id="turn-indicator">
+            <span class="dot white-dot"></span> دورك
+        </div>
+    </div>
+
+    <!-- نافذة النتيجة (Modal) -->
+    <div id="game-over-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="result-title">انتهت اللعبة</h2>
+                <div class="ayanokoji-avatar">
+                    <img src="https://i.imgur.com/8QJ4vZl.png" alt="Ayanokoji" onerror="this.src='https://via.placeholder.com/80x80/1a1a1a/ffffff?text=A'">
+                </div>
+            </div>
+            <p id="ayanokoji-message" class="ayanokoji-quote">"..."</p>
+            <button id="btn-play-again" class="play-again-btn">العب مرة أخرى</button>
+        </div>
+    </div>
+
+    <!-- ملفات الجافاسكريبت (بالترتيب الصحيح) -->
     <script src="script.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/chess.js"></script>
     <script src="js/chessboard-1.0.0.js"></script>
-    
-    <!-- استدعاء عقل أيانوكوجي -->
     <script src="ayanokoji-ai.js"></script>
     <script src="init.js"></script>
 </body>
