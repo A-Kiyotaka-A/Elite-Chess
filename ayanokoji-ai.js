@@ -31,24 +31,15 @@ function getBookMove(game) {
 function evaluatePosition(game) {
     if (game.in_checkmate()) return game.turn() === 'w' ? -99999 : 99999;
     if (game.in_draw()) return 0;
-
     let score = 0;
     const board = game.board();
-    const centerSquares = { 'd4': 0, 'd5': 0, 'e4': 0, 'e5': 0 };
-    
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const piece = board[i][j];
             if (!piece) continue;
-            const sq = String.fromCharCode(97 + j) + (8 - i);
             const pstValue = piece.color === 'w' ? PST[piece.type][i][j] : PST[piece.type][7 - i][j];
             const totalValue = PIECE_VALUES[piece.type] + pstValue;
             score += piece.color === 'w' ? totalValue : -totalValue;
-            
-            if (centerSquares.hasOwnProperty(sq)) {
-                const bonus = piece.type === 'p' ? 10 : (piece.type === 'n' || piece.type === 'b' ? 15 : 5);
-                score += piece.color === 'w' ? bonus : -bonus;
-            }
         }
     }
     return score;
@@ -56,8 +47,8 @@ function evaluatePosition(game) {
 
 function minimax(game, depth, alpha, beta, isMaximizing) {
     if (depth === 0 || game.game_over()) return evaluatePosition(game);
-
     const moves = game.moves({ verbose: true });
+    // ترتيب الحركات لتسريع Alpha-Beta Pruning
     moves.sort((a, b) => {
         const scoreA = a.captured ? PIECE_VALUES[a.captured] : 0;
         const scoreB = b.captured ? PIECE_VALUES[b.captured] : 0;
@@ -89,8 +80,8 @@ function minimax(game, depth, alpha, beta, isMaximizing) {
     }
 }
 
-// الدالة الرئيسية المحسّنة للأجهزة البطيئة
-function getBestMove(game, timeLimit = 1500) { // 1.5 ثانية كحد أقصى لمنع التهنيج
+// الدالة الرئيسية المحسّنة للأجهزة البطيئة (سرعة فائقة)
+function getBestMove(game, timeLimit = 800) { // 800 ميلي ثانية فقط كحد أقصى
     const bookMove = getBookMove(game);
     if (bookMove) return bookMove;
     
@@ -101,7 +92,7 @@ function getBestMove(game, timeLimit = 1500) { // 1.5 ثانية كحد أقصى
     let bestMove = null;
     let bestScore = game.turn() === 'w' ? -Infinity : Infinity;
     const isMaximizing = game.turn() === 'w';
-    const MAX_DEPTH = 3; // عمق 3 مثالي للأجهزة المتوسطة/البطيئة
+    const MAX_DEPTH = 2; // عمق 2 يضمن سرعة هائلة بدون تجميد الشاشة
     
     moves.sort((a, b) => {
         const scoreA = a.captured ? PIECE_VALUES[a.captured] : 0;
@@ -114,8 +105,7 @@ function getBestMove(game, timeLimit = 1500) { // 1.5 ثانية كحد أقصى
         let depthBestScore = isMaximizing ? -Infinity : Infinity;
         
         for (const move of moves) {
-            // فحص الوقت قبل كل حركة لمنع تجميد المتصفح نهائياً
-            if (Date.now() - startTime > timeLimit) break;
+            if (Date.now() - startTime > timeLimit) break; // كسر الحلقة فوراً إذا انتهى الوقت
             
             game.move(move);
             const score = minimax(game, depth - 1, -Infinity, Infinity, !isMaximizing);
@@ -130,10 +120,8 @@ function getBestMove(game, timeLimit = 1500) { // 1.5 ثانية كحد أقصى
         
         bestMove = depthBestMove;
         bestScore = depthBestScore;
-        
         if (Math.abs(bestScore) > 90000) break; // كش مات
-        if (Date.now() - startTime > timeLimit) break; // نفد الوقت
+        if (Date.now() - startTime > timeLimit) break;
     }
-    
     return bestMove;
 }
