@@ -1,4 +1,3 @@
-/* الحركة العادية: دائرة رمادية شبحية صغيرة */
 .square-55d63.move-normal::after {
     content: '';
     position: absolute;
@@ -19,7 +18,6 @@
     50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
 }
 
-/* حركة الأكل: علامة X كبيرة خشنة حمراء شبحية */
 .square-55d63.move-capture::before {
     content: '';
     position: absolute;
@@ -37,7 +35,6 @@
     50% { opacity: 0.9; }
 }
 
-/* التبييت: سهمين كبيرين */
 .square-55d63.move-castle::before {
     content: '⇄';
     position: absolute;
@@ -55,7 +52,6 @@
     50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
 }
 
-/* الكش العادي: توهج أحمر شبحي شفاف */
 .square-55d63.in-check {
     background: radial-gradient(circle, rgba(255, 50, 50, 0.5) 0%, rgba(255, 50, 50, 0.2) 50%, transparent 75%) !important;
     box-shadow: inset 0 0 30px rgba(255, 50, 50, 0.6), 0 0 20px rgba(255, 50, 50, 0.5);
@@ -66,7 +62,6 @@
     50% { box-shadow: inset 0 0 45px rgba(255, 50, 50, 0.8), 0 0 35px rgba(255, 50, 50, 0.7); }
 }
 
-/* الكش النهائي (كش مات): أحمر غامق مكثف ومختلف */
 .square-55d63.in-checkmate {
     background: radial-gradient(circle, rgba(180, 0, 0, 0.8) 0%, rgba(100, 0, 0, 0.6) 50%, rgba(50, 0, 0, 0.4) 75%) !important;
     box-shadow: inset 0 0 50px rgba(180, 0, 0, 0.9), 0 0 40px rgba(180, 0, 0, 0.8), 0 0 70px rgba(100, 0, 0, 0.6);
