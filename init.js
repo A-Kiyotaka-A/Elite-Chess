@@ -23,8 +23,8 @@ var board = Chessboard('board-container', {
         removeMoveIndicators();
         updateCheckStatus();
         
-        // دور أيانوكوجي
         if (!game.game_over()) {
+            // تأخير بسيط لإعطاء أيانوكوجي وقت "التفكير"
             setTimeout(makeAyanokojiMove, 300);
         }
     },
@@ -35,13 +35,16 @@ var board = Chessboard('board-container', {
 });
 
 function makeAyanokojiMove() {
-    const bestMove = getBestMove(game);
-    
-    if (bestMove) {
-        game.move(bestMove);
-        board.position(game.fen());
-        updateCheckStatus();
-    }
+    // استخدام setTimeout للسماح للمتصفح بتحديث الواجهة
+    setTimeout(() => {
+        const bestMove = getBestMove(game, 10000); // 10 ثوانٍ كحد أقصى
+        
+        if (bestMove) {
+            game.move(bestMove);
+            board.position(game.fen());
+            updateCheckStatus();
+        }
+    }, 100);
 }
 
 function showPossibleMoves(square) {
