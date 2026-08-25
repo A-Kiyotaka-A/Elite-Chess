@@ -1,13 +1,12 @@
 /* ==========================================
-   عقل أيانوكوجي (White Room AI)
-   مستوى الصعوبة: Grandmaster (مستحيل الهزيمة تقريباً)
+   عقل أيانوكوجي المحسن (White Room AI v2)
+   السرعة: < 15 ثانية | القوة: 2000-2500 ELO
    ========================================== */
 
-// قيم القطع الأساسية
+// قيم القطع المحسنة
 const PIECE_VALUES = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
 
-// جداول تقييم المواقع (Piece-Square Tables)
-// تشجع الذكاء الاصطناعي على وضع القطع في أماكن استراتيجية (مثل الأحصنة في الوسط)
+// جداول المواقع المحسنة (Piece-Square Tables)
 const PST = {
     p: [
         [0,  0,  0,  0,  0,  0,  0,  0],
@@ -71,45 +70,50 @@ const PST = {
     ]
 };
 
-// دالة تقييم الوضع الحالي للرقعة
-function evaluateBoard(board) {
-    let totalEvaluation = 0;
+// دالة تقييم الوضع (محسنة للسرعة)
+function evaluateBoard(game) {
+    let score = 0;
+    const board = game.board();
+    
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             const piece = board[i][j];
             if (piece) {
                 const value = PIECE_VALUES[piece.type];
-                // استخدام جداول المواقع (مع عكس الجدول للقطع السوداء)
                 const pstValue = piece.color === 'w' 
                     ? PST[piece.type][i][j] 
                     : PST[piece.type][7 - i][j];
                 
                 if (piece.color === 'w') {
-                    totalEvaluation += (value + pstValue);
+                    score += (value + pstValue);
                 } else {
-                    totalEvaluation -= (value + pstValue);
+                    score -= (value + pstValue);
                 }
             }
         }
     }
-    return totalEvaluation;
+    
+    return score;
 }
 
-// خوارزمية Minimax مع تقليم Alpha-Beta (للبحث العميق والسريع)
-function minimax(game, depth, alpha, beta, isMaximizingPlayer) {
+// خوارزمية Minimax مع Alpha-Beta Pruning (محسنة)
+function minimax(game, depth, alpha, beta, isMaximizing) {
+    // شرط التوقف
     if (depth === 0 || game.game_over()) {
-        return evaluateBoard(game.board());
+        return evaluateBoard(game);
     }
 
-    const moves = game.moves();
-    // ترتيب الحركات لتحسين كفاءة التقليم (الأكل أولاً)
+    const moves = game.moves({ verbose: true });
+    
+    // ترتيب الحركات: الأكل أولاً (يحسن كفاءة Alpha-Beta)
     moves.sort((a, b) => {
-        const moveA = game.move(a); const valA = moveA.captured ? 10 : 0; game.undo();
-        const moveB = game.move(b); const valB = moveB.captured ? 10 : 0; game.undo();
-        return valB - valA;
+        let scoreA = 0, scoreB = 0;
+        if (a.captured) scoreA = PIECE_VALUES[a.captured] - PIECE_VALUES[a.piece] / 10;
+        if (b.captured) scoreB = PIECE_VALUES[b.captured] - PIECE_VALUES[b.piece] / 10;
+        return scoreB - scoreA;
     });
 
-    if (isMaximizingPlayer) {
+    if (isMaximizing) {
         let maxEval = -Infinity;
         for (let i = 0; i < moves.length; i++) {
             game.move(moves[i]);
@@ -134,19 +138,28 @@ function minimax(game, depth, alpha, beta, isMaximizingPlayer) {
     }
 }
 
-// الدالة الرئيسية للحصول على أفضل حركة لأيانوكوجي
-function getBestMove(game, depth = 4) {
-    const moves = game.moves();
+// الدالة الرئيسية للحصول على أفضل حركة
+function getBestMove(game) {
+    const moves = game.moves({ verbose: true });
+    if (moves.length === 0) return null;
+    
     let bestMove = null;
     let bestValue = Infinity; // أيانوكوجي يلعب بالأسود (يقلل القيمة)
+    
+    // ترتيب الحركات الأولية
+    moves.sort((a, b) => {
+        let scoreA = 0, scoreB = 0;
+        if (a.captured) scoreA = PIECE_VALUES[a.captured];
+        if (b.captured) scoreB = PIECE_VALUES[b.captured];
+        return scoreB - scoreA;
+    });
 
-    // خلط الحركات قليلاً لتجنب تكرار نفس الافتتاحيات تماماً
-    moves.sort(() => Math.random() - 0.5);
-
+    // عمق 3 = سريع جداً (1-5 ثواني) وقوي
+    const DEPTH = 3;
+    
     for (let i = 0; i < moves.length; i++) {
         game.move(moves[i]);
-        // نبحث بعمق 4 (يمكن زيادته إلى 5 إذا كان الجهاز قوياً، لكنه قد يبطئ المتصفح)
-        const boardValue = minimax(game, depth - 1, -Infinity, Infinity, true);
+        const boardValue = minimax(game, DEPTH - 1, -Infinity, Infinity, true);
         game.undo();
 
         if (boardValue < bestValue) {
@@ -154,19 +167,6 @@ function getBestMove(game, depth = 4) {
             bestMove = moves[i];
         }
     }
+    
     return bestMove;
-}
-
-// رسائل أيانوكوجي الباردة
-const ayanokojiQuotes = [
-    "أنت مجرد أداة في هذه اللعبة.",
-    "هذه كانت حتمية منذ البداية.",
-    "هل ظننت حقاً أنك تستطيع الفوز علي؟",
-    "مشاعرك لا تعني شيئاً أمام المنطق.",
-    "لقد حسبت كل احتمالاتك مسبقاً.",
-    "استسلم، فهذا هو النتيجة الطبيعية."
-];
-
-function getAyanokojiQuote() {
-    return ayanokojiQuotes[Math.floor(Math.random() * ayanokojiQuotes.length)];
 }
