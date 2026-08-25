@@ -7,10 +7,11 @@ var board = Chessboard('board-container', {
     position: 'start',
     pieceTheme: 'img/chesspieces/wikipedia/{piece}.png',
     
-    // السماح بسحب أي قطعة (أبيض أو أسود) للتجربة
+    // السماح فقط للاعب بتحريك القطع البيضاء (تحضيراً للروبوت)
     onDragStart: function(source, piece, position, orientation) {
         if (game.game_over()) return false;
-        return true; 
+        if (piece.search(/^b/) !== -1) return false; // منع سحب القطع السوداء
+        return true;
     },
     
     // التحقق من الحركات القانونية عند الإفلات
@@ -24,17 +25,21 @@ var board = Chessboard('board-container', {
         // إذا كانت الحركة غير قانونية، أعد القطعة لمكانها فوراً
         if (move === null) return 'snapback';
         
-        // ملاحظة هامة: لا نضع board.position() هنا لتجنب ظهور "الأشباح"
+        // إزالة المؤشرات القديمة فوراً بعد الحركة
+        removeMoveIndicators();
     },
     
-    // تحديث الرقعة بعد استقرار القطعة (هذا هو المكان الصحيح لمنع الأشباح)
+    // تحديث الرقعة بعد استقرار القطعة (هذا هو الحل السحري لمنع "الأشباح")
     onSnapEnd: function() {
         board.position(game.fen());
         updateCheckStatus();
+        
+        // ملاحظة: هنا سنضيف استدعاء دور الروبوت لاحقاً
+        // setTimeout(makeRobotMove, 500);
     }
 });
 
-// دالة لعرض الحركات الممكنة عند النقر على قطعة
+// دالة لعرض الحركات الممكنة عند النقر على قطعة بيضاء
 function showPossibleMoves(square) {
     removeMoveIndicators();
     var moves = game.moves({ square: square, verbose: true });
@@ -42,14 +47,15 @@ function showPossibleMoves(square) {
     
     for (var i = 0; i < moves.length; i++) {
         var move = moves[i];
-        var targetSquare = $('.square-' + move.to);
+        // استخدام محدد jQuery آمن للعثور على المربع
+        var $targetSquare = $('.square-' + move.to);
         
         if (move.flags.includes('k') || move.flags.includes('q')) {
-            targetSquare.addClass('move-castle');
+            $targetSquare.addClass('move-castle');
         } else if (move.flags.includes('c') || move.flags.includes('e')) {
-            targetSquare.addClass('move-capture');
+            $targetSquare.addClass('move-capture');
         } else {
-            targetSquare.addClass('move-normal');
+            $targetSquare.addClass('move-normal');
         }
     }
 }
@@ -88,11 +94,13 @@ function getKingSquare(color) {
     return null;
 }
 
-// إضافة حدث النقر لإظهار الحركات
+// إضافة حدث النقر لإظهار الحركات (تم إصلاح خطأ undefined هنا باستخدام document)
 $(document).on('click', '.square-55d63', function() {
     var square = $(this).data('square');
     var piece = game.get(square);
-    if (piece) {
+    
+    // إظهار الحركات فقط عند النقر على قطعة بيضاء (اللاعب)
+    if (piece && piece.color === 'w') {
         showPossibleMoves(square);
     } else {
         removeMoveIndicators();
