@@ -7,12 +7,14 @@ var board = Chessboard('board-container', {
     position: 'start',
     pieceTheme: 'img/chesspieces/wikipedia/{piece}.png',
     
+    // منع سحب القطع السوداء أو اللعب بعد انتهاء اللعبة
     onDragStart: function(source, piece, position, orientation) {
         if (game.game_over()) return false;
-        if (piece.search(/^b/) !== -1) return false; // منع سحب القطع السوداء
+        if (piece.search(/^b/) !== -1) return false; 
         return true;
     },
     
+    // التحقق من صحة الحركة عند الإفلات
     onDrop: function(source, target) {
         var move = game.move({
             from: source,
@@ -20,14 +22,16 @@ var board = Chessboard('board-container', {
             promotion: 'q'
         });
         
+        // إذا كانت الحركة غير قانونية، أعد القطعة لمكانها فوراً
         if (move === null) return 'snapback';
         
-        board.position(game.fen());
-        updateCheckStatus();
+        // ⚠️ ملاحظة هامة: لا نضع board.position() هنا لتجنب ظهور "الأشباح"
     },
     
+    // تحديث الرقعة بعد استقرار القطعة (هذا هو المكان الصحيح لمنع الأشباح)
     onSnapEnd: function() {
-        board.position(game.fen());
+        board.position(game.fen()); 
+        updateCheckStatus();
     }
 });
 
@@ -39,6 +43,7 @@ function showPossibleMoves(square) {
     
     for (var i = 0; i < moves.length; i++) {
         var move = moves[i];
+        // البحث عن المربع الهدف في الرقعة
         var targetSquare = board.$board.find('.square-' + move.to);
         
         if (move.flags.includes('k') || move.flags.includes('q')) {
@@ -56,22 +61,22 @@ function removeMoveIndicators() {
     board.$board.find('.square-55d63').removeClass('move-normal move-capture move-castle in-check in-checkmate');
 }
 
-// دالة للتحقق من حالة الكش
+// دالة للتحقق من حالة الكش والكش مات
 function updateCheckStatus() {
     removeMoveIndicators();
     if (game.in_checkmate()) {
         var kingSquare = getKingSquare(game.turn());
         if (kingSquare) board.$board.find('.square-' + kingSquare).addClass('in-checkmate');
-        setTimeout(function() { alert('كش مات! اللعبة انتهت.'); }, 100);
+        setTimeout(function() { alert('كش مات! انتهت اللعبة.'); }, 300);
     } else if (game.in_check()) {
         var kingSquare = getKingSquare(game.turn());
         if (kingSquare) board.$board.find('.square-' + kingSquare).addClass('in-check');
     } else if (game.in_draw()) {
-        setTimeout(function() { alert('تعادل! اللعبة انتهت.'); }, 100);
+        setTimeout(function() { alert('تعادل! انتهت اللعبة.'); }, 300);
     }
 }
 
-// دالة للحصول على مربع الملك
+// دالة للحصول على موقع الملك الحالي
 function getKingSquare(color) {
     var boardPosition = game.board();
     for (var i = 0; i < 8; i++) {
@@ -85,15 +90,19 @@ function getKingSquare(color) {
     return null;
 }
 
-// إضافة حدث النقر على المربعات
+// إضافة حدث النقر لإظهار الحركات (يعمل مع السحب والإفلات أيضاً)
 board.$board.on('click', '.square-55d63', function() {
     var square = $(this).data('square');
     var piece = game.get(square);
+    // إظهار الحركات فقط عند النقر على قطعة بيضاء (اللاعب)
     if (piece && piece.color === 'w') {
         showPossibleMoves(square);
+    } else {
+        removeMoveIndicators(); // إخفاء المؤشرات عند النقر في مكان فارغ
     }
 });
 
+// إعادة ضبط حجم الرقعة عند تغيير حجم النافذة
 $(window).resize(function() {
     board.resize();
 });
