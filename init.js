@@ -7,7 +7,7 @@ var board = Chessboard('board-container', {
     
     onDragStart: function(source, piece) {
         if (game.game_over()) return false;
-        if (piece.search(/^b/) !== -1) return false; // منع سحب قطع أيانوكوجي
+        if (piece.search(/^b/) !== -1) return false;
         return true;
     },
     
@@ -23,9 +23,9 @@ var board = Chessboard('board-container', {
         removeMoveIndicators();
         updateCheckStatus();
         
-        // إذا لم تنته اللعبة، دع أيانوكوجي يلعب
+        // دور أيانوكوجي
         if (!game.game_over()) {
-            setTimeout(makeAyanokojiMove, 600); // تأخير بسيط لمحاكاة "التفكير"
+            setTimeout(makeAyanokojiMove, 300);
         }
     },
     
@@ -34,27 +34,16 @@ var board = Chessboard('board-container', {
     }
 });
 
-// دالة جعل أيانوكوجي يلعب
 function makeAyanokojiMove() {
-    const statusEl = document.getElementById('ayanokoji-status');
-    statusEl.style.display = 'block';
-    statusEl.textContent = getAyanokojiQuote(); // عرض رسالة باردة أثناء التفكير
-
-    // استخدام setTimeout للسماح للمتصفح بتحديث واجهة المستخدم قبل بدء الحساب الثقيل
-    setTimeout(() => {
-        const bestMove = getBestMove(game, 4); // عمق 4 = قوي جداً وسريع
-        
-        if (bestMove) {
-            game.move(bestMove);
-            board.position(game.fen());
-            updateCheckStatus();
-        }
-        
-        statusEl.style.display = 'none'; // إخفاء رسالة التفكير
-    }, 500);
+    const bestMove = getBestMove(game);
+    
+    if (bestMove) {
+        game.move(bestMove);
+        board.position(game.fen());
+        updateCheckStatus();
+    }
 }
 
-// --- دوال المساعدة (نفس السابقة) ---
 function showPossibleMoves(square) {
     removeMoveIndicators();
     var moves = game.moves({ square: square, verbose: true });
@@ -83,12 +72,12 @@ function updateCheckStatus() {
     if (game.in_checkmate()) {
         var kingSquare = getKingSquare(game.turn());
         if (kingSquare) $('.square-' + kingSquare).addClass('in-checkmate');
-        setTimeout(() => alert('أيانوكوجي: "لقد انتهت اللعبة، كما توقعت."'), 300);
+        setTimeout(() => alert('كش مات! انتهت اللعبة.'), 300);
     } else if (game.in_check()) {
         var kingSquare = getKingSquare(game.turn());
         if (kingSquare) $('.square-' + kingSquare).addClass('in-check');
     } else if (game.in_draw()) {
-        setTimeout(() => alert('أيانوكوجي: "تعادل. لم تكن تستحق أكثر من ذلك."'), 300);
+        setTimeout(() => alert('تعادل! انتهت اللعبة.'), 300);
     }
 }
 
