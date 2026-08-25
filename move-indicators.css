@@ -1,7 +1,3 @@
-/* ========================================
-   مؤشرات الحركات البصرية الشبحية
-   ======================================== */
-
 /* الحركة العادية: دائرة رمادية شبحية صغيرة */
 .square-55d63.move-normal::after {
     content: '';
@@ -18,7 +14,6 @@
     pointer-events: none;
     z-index: 5;
 }
-
 @keyframes pulse-normal {
     0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
     50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.1); }
@@ -28,32 +23,25 @@
 .square-55d63.move-capture::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     background: 
         linear-gradient(45deg, transparent 40%, rgba(180, 180, 180, 0.5) 45%, rgba(180, 180, 180, 0.5) 55%, transparent 60%),
         linear-gradient(-45deg, transparent 40%, rgba(180, 180, 180, 0.5) 45%, rgba(180, 180, 180, 0.5) 55%, transparent 60%);
-    box-shadow: 
-        inset 0 0 20px rgba(180, 180, 180, 0.3),
-        0 0 15px rgba(180, 180, 180, 0.4);
+    box-shadow: inset 0 0 20px rgba(180, 180, 180, 0.3), 0 0 15px rgba(180, 180, 180, 0.4);
     animation: pulse-capture 2s infinite;
     pointer-events: none;
     z-index: 5;
 }
-
 @keyframes pulse-capture {
     0%, 100% { opacity: 0.5; }
     50% { opacity: 0.8; }
 }
 
-/* التبييت: سهمين كبيرين (يمين ويسار) */
+/* التبييت: سهمين كبيرين */
 .square-55d63.move-castle::before {
     content: '⇄';
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     font-size: 2.5em;
     color: rgba(180, 180, 180, 0.7);
@@ -62,21 +50,17 @@
     pointer-events: none;
     z-index: 5;
 }
-
 @keyframes pulse-castle {
     0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
     50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.1); }
 }
 
-/* الكش العادي: لون أحمر شبحي شفاف */
+/* الكش العادي: أحمر شبحي شفاف */
 .square-55d63.in-check {
     background: radial-gradient(circle, rgba(255, 50, 50, 0.4) 0%, rgba(255, 50, 50, 0.2) 50%, transparent 70%) !important;
-    box-shadow: 
-        inset 0 0 30px rgba(255, 50, 50, 0.5),
-        0 0 20px rgba(255, 50, 50, 0.4);
+    box-shadow: inset 0 0 30px rgba(255, 50, 50, 0.5), 0 0 20px rgba(255, 50, 50, 0.4);
     animation: check-pulse 1.5s infinite;
 }
-
 @keyframes check-pulse {
     0%, 100% { box-shadow: inset 0 0 30px rgba(255, 50, 50, 0.5), 0 0 20px rgba(255, 50, 50, 0.4); }
     50% { box-shadow: inset 0 0 40px rgba(255, 50, 50, 0.7), 0 0 30px rgba(255, 50, 50, 0.6); }
@@ -85,28 +69,15 @@
 /* الكش النهائي (كش مات): أحمر غامق مختلف */
 .square-55d63.in-checkmate {
     background: radial-gradient(circle, rgba(180, 0, 0, 0.7) 0%, rgba(139, 0, 0, 0.5) 50%, rgba(100, 0, 0, 0.3) 70%) !important;
-    box-shadow: 
-        inset 0 0 40px rgba(139, 0, 0, 0.8),
-        0 0 30px rgba(139, 0, 0, 0.7),
-        0 0 50px rgba(180, 0, 0, 0.5);
+    box-shadow: inset 0 0 40px rgba(139, 0, 0, 0.8), 0 0 30px rgba(139, 0, 0, 0.7), 0 0 50px rgba(180, 0, 0, 0.5);
     animation: checkmate-pulse 1s infinite;
 }
-
 @keyframes checkmate-pulse {
-    0%, 100% { 
-        box-shadow: inset 0 0 40px rgba(139, 0, 0, 0.8), 0 0 30px rgba(139, 0, 0, 0.7), 0 0 50px rgba(180, 0, 0, 0.5);
-        transform: scale(1);
-    }
-    50% { 
-        box-shadow: inset 0 0 50px rgba(180, 0, 0, 0.9), 0 0 40px rgba(180, 0, 0, 0.8), 0 0 60px rgba(139, 0, 0, 0.6);
-        transform: scale(1.02);
-    }
+    0%, 100% { box-shadow: inset 0 0 40px rgba(139, 0, 0, 0.8), 0 0 30px rgba(139, 0, 0, 0.7), 0 0 50px rgba(180, 0, 0, 0.5); transform: scale(1); }
+    50% { box-shadow: inset 0 0 50px rgba(180, 0, 0, 0.9), 0 0 40px rgba(180, 0, 0, 0.8), 0 0 60px rgba(139, 0, 0, 0.6); transform: scale(1.02); }
 }
 
-/* تأثير عند التمرير على المربعات المميزة */
-.square-55d63.move-normal:hover,
-.square-55d63.move-capture:hover,
-.square-55d63.move-castle:hover {
+.square-55d63.move-normal:hover, .square-55d63.move-capture:hover, .square-55d63.move-castle:hover {
     background: rgba(255, 255, 255, 0.15) !important;
     cursor: pointer;
 }
