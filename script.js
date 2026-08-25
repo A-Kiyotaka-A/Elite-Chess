@@ -5,14 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const videos = ['1.mp4', '2.mp4'];
     source.src = videos[Math.floor(Math.random() * videos.length)];
     
-    // تحسينات صارمة لأداء الفيديو على الأجهزة الضعيفة
     video.setAttribute('playsinline', '');
-    video.setAttribute('preload', 'metadata'); // لا يحمل الفيديو بالكامل إلا عند الحاجة
+    video.setAttribute('preload', 'metadata');
     video.muted = true;
     
     const tryPlay = () => {
         video.play().catch(() => {
-            // إذا منع المتصفح التشغيل التلقائي، ننتظر أول لمس أو نقرة
             const unlock = () => {
                 video.play();
                 document.removeEventListener('click', unlock);
@@ -25,11 +23,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     tryPlay();
 
-    // توفير الموارد: إيقاف الفيديو فوراً إذا غادر المستخدم التبويب
+    // التعامل الذكي مع مغادرة التبويب (يمنع إعادة التحميل من الصفر)
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
-            video.pause();
+            video.pause(); // إيقاف الفيديو لتوفير الموارد
         } else {
+            // عند العودة، فقط استأنف الفيديو، لا تعيد تحميل الصفحة
             video.play().catch(() => {});
         }
     });
