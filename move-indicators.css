@@ -1,8 +1,4 @@
-/* ========================================
-   مؤشرات الحركات البصرية الشبحية (محدثة)
-   ======================================== */
-
-/* 1. الحركة العادية: دائرة رمادية شبحية صغيرة */
+/* الحركة العادية: دائرة رمادية شبحية صغيرة */
 .square-55d63.move-normal::after {
     content: '';
     position: absolute;
@@ -16,14 +12,14 @@
     box-shadow: 0 0 15px rgba(200, 200, 200, 0.5);
     animation: pulse-normal 2s infinite;
     pointer-events: none;
-    z-index: 50; /* ضمان الظهور فوق كل شيء */
+    z-index: 100;
 }
 @keyframes pulse-normal {
     0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
     50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
 }
 
-/* 2. حركة الأكل: علامة X كبيرة خشنة رمادية شبحية */
+/* حركة الأكل: علامة X كبيرة خشنة رمادية شبحية */
 .square-55d63.move-capture::before {
     content: '';
     position: absolute;
@@ -34,14 +30,14 @@
     box-shadow: inset 0 0 20px rgba(220, 50, 50, 0.3);
     animation: pulse-capture 1.5s infinite;
     pointer-events: none;
-    z-index: 50;
+    z-index: 100;
 }
 @keyframes pulse-capture {
     0%, 100% { opacity: 0.6; }
     50% { opacity: 0.9; }
 }
 
-/* 3. التبييت: سهمين كبيرين */
+/* التبييت: سهمين كبيرين */
 .square-55d63.move-castle::before {
     content: '⇄';
     position: absolute;
@@ -52,14 +48,14 @@
     text-shadow: 0 0 15px rgba(100, 200, 255, 0.6);
     animation: pulse-castle 2s infinite;
     pointer-events: none;
-    z-index: 50;
+    z-index: 100;
 }
 @keyframes pulse-castle {
     0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
     50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
 }
 
-/* 4. الكش العادي: توهج أحمر شبحي شفاف */
+/* الكش العادي: توهج أحمر شبحي شفاف */
 .square-55d63.in-check {
     background: radial-gradient(circle, rgba(255, 50, 50, 0.5) 0%, rgba(255, 50, 50, 0.2) 50%, transparent 75%) !important;
     box-shadow: inset 0 0 30px rgba(255, 50, 50, 0.6), 0 0 20px rgba(255, 50, 50, 0.5);
@@ -70,7 +66,7 @@
     50% { box-shadow: inset 0 0 45px rgba(255, 50, 50, 0.8), 0 0 35px rgba(255, 50, 50, 0.7); }
 }
 
-/* 5. الكش النهائي (كش مات): أحمر غامق مكثف ومختلف */
+/* الكش النهائي (كش مات): أحمر غامق مكثف ومختلف */
 .square-55d63.in-checkmate {
     background: radial-gradient(circle, rgba(180, 0, 0, 0.8) 0%, rgba(100, 0, 0, 0.6) 50%, rgba(50, 0, 0, 0.4) 75%) !important;
     box-shadow: inset 0 0 50px rgba(180, 0, 0, 0.9), 0 0 40px rgba(180, 0, 0, 0.8), 0 0 70px rgba(100, 0, 0, 0.6);
@@ -79,12 +75,4 @@
 @keyframes checkmate-pulse {
     0%, 100% { box-shadow: inset 0 0 50px rgba(180, 0, 0, 0.9), 0 0 40px rgba(180, 0, 0, 0.8); transform: scale(1); }
     50% { box-shadow: inset 0 0 70px rgba(255, 0, 0, 1), 0 0 60px rgba(255, 0, 0, 0.9); transform: scale(1.03); }
-}
-
-/* تأثير تفاعلي عند مرور الماوس */
-.square-55d63.move-normal:hover, 
-.square-55d63.move-capture:hover, 
-.square-55d63.move-castle:hover {
-    background: rgba(255, 255, 255, 0.2) !important;
-    cursor: pointer;
 }
